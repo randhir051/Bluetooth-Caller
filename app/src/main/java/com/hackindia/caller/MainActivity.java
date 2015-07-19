@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
     private StringBuilder sb = new StringBuilder();
-
+    String phoneNumber = "";
     private ConnectedThread mConnectedThread;
 
     // SPP UUID service
@@ -63,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
                         byte[] readBuf = (byte[]) msg.obj;
                         int val = readBuf[0] & 0xFF;
                         Log.d("hey ", val + "");// aland clear
+                        if(val>=48 && val<=57){
+                        phoneNumber = phoneNumber + val;
+                    }
+                        if(phoneNumber.length()==10){
+                            call();
+                        }
                         break;
                 }
             };
@@ -75,6 +81,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void call(){
+        String uri = "tel:" + phoneNumber.trim();
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setData(Uri.parse(uri));
+        startActivity(intent);
+    }
     private void checkBTState() {
         // Check for Bluetooth support and then check to make sure it is turned on
         // Emulator doesn't support Bluetooth and will return null
